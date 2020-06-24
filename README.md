@@ -1,2 +1,122 @@
 # GPGame
-An abstraction layer on the Kivy GPU accelerated engine.
+GPGame is an abstraction layer on the Kivy GPU accelerated engine.
+
+## Why GPGame?
+Games using Kivy often have a lot of unnecessary code for the OOP. GPGame makes code shorter, makes coding games faster, and makes code more readable. In my examples I am going to be using Pong, a simple game. I am going to measure simplicity by lines of code, although I have also found that GPGame code is more readable. Below is Pong using only Kivy.
+
+```python
+from kivy.app import App
+from kivy.uix.widget import Widget
+from kivy.graphics import Ellipse, Rectangle
+from kivy.clock import Clock
+from kivy.vector import Vector
+from kivy.properties import ObjectProperty
+from kivy.core.window import Window
+from kivy.uix.label import Label
+
+
+class Rect(Widget):
+    def __init__(self, player, **kwargs):
+        super(Rect, self).__init__(**kwargs)
+
+        self.rectpos = Window.height/2
+        self.rect = Rectangle(size=(30, 100), pos=([30 if player else Window.width - 60][0], self.rectpos))
+        self.canvas.add(self.rect)
+
+    def update(self):
+        self.rect.pos = (self.rect.pos[0], self.rectpos)
+
+
+class Ball(Widget):
+    ball = ObjectProperty(None)
+
+    def __init__(self, size, **kwargs):
+        super(Ball, self).__init__(**kwargs)
+
+        self.velocityx = 800
+        self.velocityy = 800
+        self.ellipse = Ellipse(pos=self.pos, size=(size, size))
+        self.canvas.add(self.ellipse)
+
+    def update(self, dt):
+        self.pos = Vector(self.velocityx*dt, self.velocityy*dt) + self.pos
+        self.ellipse.pos = self.pos
+
+
+class Pong(Widget):
+    def __init__(self, **kwargs):
+        super(Pong, self).__init__(**kwargs)
+
+        self.ball = Ball(100)
+        self.canvas.add(self.ball.ellipse)
+
+        self.score = 0
+
+        self.mousepos = Window.height/2
+        Window.bind(mouse_pos=self.mousehandler)
+
+        self.player = Rect(True)
+        self.ai = Rect(False)
+
+        self.canvas.add(self.player.rect)
+        self.canvas.add(self.ai.rect)
+
+    def update(self, dt):
+        self.ball.update(dt)
+        self.player.update()
+        self.ai.update()
+
+        if (self.ball.x < 0) or (self.ball.right > (self.width - 60)):
+            self.ball.velocityx *= -1
+            if self.ball.x < 0:
+                self.gameover()
+
+        if (self.ball.y < 0) or (self.ball.top > self.height):
+            self.ball.velocityy *= -1
+
+        self.player.rectpos = self.mousepos
+        self.ai.rectpos = self.ball.ellipse.pos[1]
+
+        if (self.ball.x < 60) and (self.player.rectpos in range(round(self.ball.ellipse.pos[1]-50),
+                                                                round(self.ball.ellipse.pos[1]+50))):
+            self.score += 1
+            self.ball.velocityx *= -1
+
+    def gameover(self):
+        self.canvas.clear()
+        Window.clearcolor = (1, 1, 1, 1)
+        label = Label(text="[b]Game Over. Your final score was " + str(self.score) + ".[/b]", font_size="45sp",
+                      valign="center", pos=(Window.width/2, Window.height/2), color=(0, 0, 0, 1), markup=True)
+        self.add_widget(label)
+
+    def mousehandler(self, w, p):
+        self.mousepos = p[1]
+
+
+class Main(App):
+    def build(self):
+        self.title = "Pong"
+        self.game = Pong()
+        Clock.schedule_interval(self.game.update, 1 / 360)
+        Clock.schedule_interval(self.update, 1 / 360)
+        return self.game
+
+    def update(self, dt):
+        self.title = "Pong - Score: " + str(self.game.score)
+
+
+if __name__ == "__main__":
+    Main().run()
+
+```
+This program was 105 lines! I noticed that there was a lot of repeated code, like defining a boilerplate class, and creating widgets that could move around. GPGame already has simple objects for commonly used widgets, in addition to a GPGame object that creates a boilerplate game with input handling and mouse movement handling.
+## How to create Pong
+### Creating GPGame
+A basic game in GPGame simply requires 4 lines! To create an empty game in GPGame, you have to import GPGame, and run! Code is below.
+```python
+from GPGame.engine import GPGame
+game = GPGame()
+if __name__ == "__main__":
+    game.run("Tutorial")
+```
+Line 1 imports GPGame. The main GPGame object is within engine. 
