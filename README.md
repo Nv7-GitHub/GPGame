@@ -123,8 +123,8 @@ Line 1 imports GPGame. The main GPGame object is within engine. A GPGame object 
 Line 2 creates a GPGame. To create a GPGame, just instantiate a class. 
 Line 4 runs GPGame. A GPGame class has a run method. The run method accepts a title parameter. This title parameter will be the title of the window.
 
-### Adding a player-controlled paddle
-For the paddle, we are going to use a rectangle. All canvas items in GPGame are called components. Components are Kivy Widget classes with some methods. Components have their kivy object stored in the kobj attribute. Most of the time you will not need this.
+### Adding a Rectangle for the paddle
+For the paddle, we are going to use a rectangle. All canvas items in GPGame are called components. Components are Kivy Widget classes with some methods. Components have their kivy object stored in the kobj attribute. Most of the time you will not need this. A Rect has a kivy.graphics.Rectangle for this.
 All components are under the components.py file. To import components, just run ```from GPGame.components import Rect```
 Once you have imported Rect, instantiate a rect objects. A rect object accepts the parameters x, y, width, height, and color. color is a 3 item tuple containing a value from 0 to 1 for r, g, and b.
 For Pong, we are going to instantiate a Rect with an x of 10, a y of 0, a width of 10, and a height of 100. Since the default background color of a window is black, I am going to make the paddle white by setting the color to (1, 1, 1). The code for this is ```paddle = Rect(10, 0, 10, 100, (1, 1, 1))```
@@ -144,3 +144,24 @@ if __name__ == "__main__":
 ```
 When we run this, we see a rectangle in the bottom right corner of the screen (0, 0)! Congratulations!
 ![Screenshot of game at this step](https://i.imgur.com/YWXeMeh.png)
+
+## The Ball
+For the ball, we are going to use an Oval object. This object can also be imported from the the components. To do this, use ```from GPGame.components import Oval``` I am going to add this to the rectangle import, changing the line to ```from GPGame.components import Rectangle, Oval```.
+An oval has the same parameters as a Rect, x, y, width, height, color. I am going to create a Cyan ball in the center of the screen. But how do we put it in the center of the screen?
+A GPGame object has a window attribute. This attribute is just a kivy.core.window.Window object. This attribute has a width and height attribute. The center of the screen has an x of width/2, and a y of height/2. To do this, the code would be ```ball = Oval(game.window.width/2, game.window.height/2, 100, 100, (0, 1, 1))```. To add this to the game, I am going to put a add_component call. The code now is below.
+```python
+from GPGame.engine import GPGame
+from GPGame.components import Rect, Oval
+
+game = GPGame()
+paddle = Rect(10, 0, 10, 100, (1, 1, 1))
+ball = Oval(game.window.width/2, game.window.height/2, 100, 100, (0, 1, 1))
+game.add_component(paddle)
+game.add_component(ball)
+
+if __name__ == "__main__":
+    game.run("Tutorial")
+
+```
+Now, our game looks like this.
+![Screenshot of the game with the ball](https://i.imgur.com/z1k2BJi.png)
