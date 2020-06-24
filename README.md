@@ -147,8 +147,8 @@ When we run this, we see a rectangle in the bottom right corner of the screen (0
 
 ## The Ball
 For the ball, we are going to use an Oval object. This object can also be imported from the the components. To do this, use ```from GPGame.components import Oval``` I am going to add this to the rectangle import, changing the line to ```from GPGame.components import Rectangle, Oval```.
-An oval has the same parameters as a Rect, x, y, width, height, color. I am going to create a Cyan ball in the center of the screen. But how do we put it in the center of the screen?
-A GPGame object has a window attribute. This attribute is just a kivy.core.window.Window object. This attribute has a width and height attribute. The center of the screen has an x of width/2, and a y of height/2. To do this, the code would be ```ball = Oval(game.window.width/2, game.window.height/2, 100, 100, (0, 1, 1))```. To add this to the game, I am going to put a add_component call. The code now is below.
+An Oval's kobj is a ```kivy.graphics.Ellipse``` object. An oval has the same parameters as a Rect, x, y, width, height, color. We are going to create a Cyan ball in the center of the screen. But how do we put it in the center of the screen?
+A GPGame object has a window attribute. This attribute is just a ```kivy.core.window.Window``` object. This attribute has a width and height attribute. The center of the screen has an x of width/2, and a y of height/2. To do this, the code would be ```ball = Oval(game.window.width/2, game.window.height/2, 100, 100, (0, 1, 1))```. To add this to the game, I am going to put a add_component call. The code now is below.
 ```python
 from GPGame.engine import GPGame
 from GPGame.components import Rect, Oval
@@ -165,3 +165,29 @@ if __name__ == "__main__":
 ```
 Now, our game looks like this.
 ![Screenshot of the game with the ball](https://i.imgur.com/z1k2BJi.png)
+
+## The Text
+For the text we are going to use a Text object. Being a component, we can add this in the imports, changing the line to ```from GPGame.components import Rect, Oval, Text```. 
+The Text kobj attribute is a ```kivy.uix.label.Label```. To modify this text, put arguments that would modify kivy Labels, like color, which is a tuple with rgba, and font_size, which is a number with multiple possible extensions. For this, I am going to use sp. 
+I am going to create a Text object centered horizontally on the top of the window. To do this, I am once again going to use the ```game.window```. But before this, lets create a variable which would contain the score, called score. I am just going to put ```score = 0```. After that, I am going to instantiate the Text using ```scoredisplay = Text(str(score), font_size="75sp")```. Finally, I am going to move it using ```scoredisplay.move(game.window.width/2, game.window.height-150)``` Finally, add the component to the game. The code now is below.
+```python
+from GPGame.engine import GPGame
+from GPGame.components import Rect, Oval, Text
+
+game = GPGame()
+paddle = Rect(10, 0, 10, 100, (1, 1, 1))
+ball = Oval(game.window.width/2, game.window.height/2, 100, 100, (0, 1, 1))
+score = 0
+scoredisplay = Text(str(score), font_size="75sp")
+scoredisplay.move(game.window.width/2, game.window.height-150)
+game.add_component(paddle)
+game.add_component(ball)
+game.add_component(scoredisplay)
+
+
+if __name__ == "__main__":
+    game.run("Tutorial")
+
+```
+Now, there is some text on the top of the screen that says "0". It looks like this.
+![Screenshot of game with score display](https://i.imgur.com/RLiGVxx.png)
