@@ -219,3 +219,83 @@ if __name__ == "__main__":
 Now, our game looks like this.
 ![With CPU Paddle](https://i.imgur.com/mD5A9Xt.png)
 
+## Creating a tick function
+A tick function is a function that runs every frame. This is very useful in games. GPGame has a method to create tick functions built right in. 
+First, create a function after the initialization (instantiating objects, adding components, etc.), but before you use the GPGame.run method. Create one parameter, which will be the dt. This parameter contains the time it has been since the tick function was last called. Finally, create a line before the GPGame.run line, and use the GPGame.set_tick method. The first paramater is going to be the tick function, and the second one is going to be the minimum time interval. I am going to make this to 1/60, for 60FPS.
+Now, our code looks like this:
+```python
+from GPGame.engine import GPGame
+from GPGame.components import Rect, Oval, Text
+
+game = GPGame()
+paddle = Rect(10, 0, 10, 100, (1, 1, 1))
+ball = Oval(game.window.width/2, game.window.height/2, 100, 100, (0, 1, 1))
+score = 0
+scoredisplay = Text(str(score), font_size="75sp")
+scoredisplay.move(game.window.width/2, game.window.height-150)
+cpupaddle = Rect(game.window.width - 20, 0, 10, 100, (1, 1, 1))
+
+game.add_component(paddle)
+game.add_component(ball)
+game.add_component(scoredisplay)
+game.add_component(cpupaddle)
+
+
+def tick(dt):
+    pass
+
+game.set_tick(tick, 1/60)
+if __name__ == "__main__":
+    game.run("Tutorial")
+
+```
+## Having the ball bounce around
+Now, we are going to work in the tick function. The first step is to make the ball bounce around. To do this, make two variables, one called ballvelx, and one called ballvely. We will set these both to 400. This will be the velocity of our ball. 
+To move the ball, we are going to use the move method. All components have a move method. To make the ball move, we will use the line of code following: ```ball.move(ball.pos[0] + ballvelx*dt, ball.pos[1] + ballvely*dt)```. The 2 parameters are the x and y location. To make it translate, we add the current pos, which is an x,y tuple in the pos attribute to the translation. To calculate the translation, we are multiplying the velocity by the difference in time between frames. We multiply by dt so that even if the game is running slowly, the ball will move at the same speed. 
+Finally, to make the ball bounce, we will add the following if statements. 
+```python
+    if (ball.pos[0] < 0) or (ball.pos[0] > game.window.width - 120):
+        ballvelx *= -1
+
+    if (ball.pos[1] < 0) or (ball.pos[1] > game.window.height - 100):
+        ballvely *= -1
+```
+In both of these if statements, the first part checks if it is past the bottom/left sides of the screen, and the second part checks if it is past the top/right side of the screen. When checking for the right side of the screen, It does 20pixels away from the right side of the screen, because since the CPU is basically just an animation and will always hit the ball, there is no point in actually checking if the CPU hits. Now, our code looks like this.
+```python
+from GPGame.engine import GPGame
+from GPGame.components import Rect, Oval, Text
+
+game = GPGame()
+paddle = Rect(10, 0, 10, 100, (1, 1, 1))
+ball = Oval(game.window.width/2, game.window.height/2, 100, 100, (0, 1, 1))
+score = 0
+scoredisplay = Text(str(score), font_size="75sp")
+scoredisplay.move(game.window.width/2, game.window.height-150)
+cpupaddle = Rect(game.window.width - 20, 0, 10, 100, (1, 1, 1))
+ballvelx = 400
+ballvely = 400
+
+game.add_component(paddle)
+game.add_component(ball)
+game.add_component(scoredisplay)
+game.add_component(cpupaddle)
+
+
+def tick(dt):
+    global ballvely, ballvelx, score
+    ball.move(ball.pos[0] + ballvelx*dt, ball.pos[1] + ballvely*dt)
+
+    if (ball.pos[0] < 0) or (ball.pos[0] > game.window.width - 120):
+        ballvelx *= -1
+
+    if (ball.pos[1] < 0) or (ball.pos[1] > game.window.height - 100):
+        ballvely *= -1
+
+
+game.set_tick(tick, 1/60)
+if __name__ == "__main__":
+    game.run("Tutorial")
+
+```
+Now, it looks like this (warning: this is not the actual FPS. screen recording software was just slow.)
+![GIF with ball bouncing](https://i.imgur.com/qw1x6tf.gif)
