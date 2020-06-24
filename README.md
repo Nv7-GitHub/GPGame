@@ -191,3 +191,31 @@ if __name__ == "__main__":
 ```
 Now, there is some text on the top of the screen that says "0". It looks like this.
 ![Screenshot of game with score display](https://i.imgur.com/RLiGVxx.png)
+
+## CPU Paddle
+Do this in a similar fashion to the player's paddle. The code is ```cpupaddle = Rect(game.window.width - 20, 0, 10, 100, (1, 1, 1))``` and then use add_component.
+Now, the code is
+```python
+from GPGame.engine import GPGame
+from GPGame.components import Rect, Oval, Text
+
+game = GPGame()
+paddle = Rect(10, 0, 10, 100, (1, 1, 1))
+ball = Oval(game.window.width/2, game.window.height/2, 100, 100, (0, 1, 1))
+score = 0
+scoredisplay = Text(str(score), font_size="75sp")
+scoredisplay.move(game.window.width/2, game.window.height-150)
+cpupaddle = Rect(game.window.width - 20, 0, 10, 100, (1, 1, 1))
+
+game.add_component(paddle)
+game.add_component(ball)
+game.add_component(scoredisplay)
+game.add_component(cpupaddle)
+
+
+if __name__ == "__main__":
+    game.run("Tutorial")
+```
+Now, our game looks like this.
+![With CPU Paddle](https://i.imgur.com/mD5A9Xt.png)
+
