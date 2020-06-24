@@ -343,4 +343,66 @@ if __name__ == "__main__":
 
 ```
 And the game now looks like this (The screen recording software does not capture my mouse, but I assure you the paddle is following my mouse).
+
 ![GIF with user input](https://i.imgur.com/U8633Fb.gif)
+
+## Making the score change with paddle and making the ball bounce
+Now, we have to make the ball bounce off of the paddle and the score change. We can do this by just checking if the ball y is in the range of the paddle. I am sure there is a much better way of doing this but this is the most readable way I could find. To change the text of the score, we will use the Text set_text method. Finally, we will multiply the ball velocity so that it gets faster as the score goes higher. The code below acheives the score changing and ball bouncing.
+```python
+        if (ball.pos[0] < 20) and (round(ball.pos[1]) in range(round(paddle.pos[1]-100), round(paddle.pos[1] + 100))):
+            score += 1
+            scoredisplay.set_text(str(score))
+            ballvelx *= -1
+
+            ballvelx *= 1.1
+            ballvely *= 1.1
+```
+Now, our program looks like this:
+```python
+from GPGame.engine import GPGame
+from GPGame.components import Rect, Oval, Text
+
+game = GPGame()
+paddle = Rect(10, 0, 10, 100, (1, 1, 1))
+ball = Oval(game.window.width/2, game.window.height/2, 100, 100, (0, 1, 1))
+score = 0
+scoredisplay = Text(str(score), font_size="75sp")
+scoredisplay.move(game.window.width/2, game.window.height-150)
+cpupaddle = Rect(game.window.width - 20, 0, 10, 100, (1, 1, 1))
+ballvelx = 400
+ballvely = 400
+
+game.add_component(paddle)
+game.add_component(ball)
+game.add_component(scoredisplay)
+game.add_component(cpupaddle)
+
+
+def tick(dt):
+    global ballvely, ballvelx, score
+    ball.move(ball.pos[0] + ballvelx*dt, ball.pos[1] + ballvely*dt)
+
+    if (ball.pos[0] < 0) or (ball.pos[0] > game.window.width - 120):
+        ballvelx *= -1
+
+    if (ball.pos[1] < 0) or (ball.pos[1] > game.window.height - 100):
+        ballvely *= -1
+
+    cpupaddle.move(cpupaddle.pos[0], ball.pos[1])
+    paddle.move(paddle.pos[0], game.mousepos[1])
+
+    if (ball.pos[0] < 20) and (round(ball.pos[1]) in range(round(paddle.pos[1] - 100), round(paddle.pos[1] + 100))):
+        score += 1
+        scoredisplay.set_text(str(score))
+        ballvelx *= -1
+
+        ballvelx *= 1.1
+        ballvely *= 1.1
+
+
+game.set_tick(tick, 1/60)
+if __name__ == "__main__":
+    game.run("Tutorial")
+```
+And our game looks like this! (again, it is not actually this slow) Also, you can see that when it bounces off the wall, the score does not change:
+![Game with ball bouncing off of paddle and score changing](https://i.imgur.com/R7St9za.gif)
