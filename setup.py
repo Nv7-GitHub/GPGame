@@ -11,7 +11,7 @@ setuptools.setup(
     description="An abstraction layer on the Kivy GPU accelerated engine.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/Nv7-GitHub/GPGame",
     packages=setuptools.find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
