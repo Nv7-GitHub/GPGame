@@ -405,4 +405,5 @@ if __name__ == "__main__":
     game.run("Tutorial")
 ```
 And our game looks like this! (again, it is not actually this slow) Also, you can see that when it bounces off the wall, the score does not change:
+
 ![Game with ball bouncing off of paddle and score changing](https://i.imgur.com/R7St9za.gif)
