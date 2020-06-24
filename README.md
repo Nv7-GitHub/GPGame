@@ -299,3 +299,48 @@ if __name__ == "__main__":
 ```
 Now, it looks like this (warning: this is not the actual FPS. screen recording software was just slow.)
 ![GIF with ball bouncing](https://i.imgur.com/qw1x6tf.gif)
+
+## Making the paddle mouve with mouse and the cpu paddle move with the ball
+Now, we have to add user input. First though, we are going to do the CPU. To do the CPU, we are just going to set the CPU Y position to the paddles Y position. We can acheive this by putting this line of code in out tick function: ```cpupaddle.move(cpupaddle.pos[0], ball.pos[1])```. Now, out CPU moves with the ball, and our ball is no longer bouncing off of thin air (if there is air in a game?)! Next, the user input.
+A GPGame class has a mousepos attribute. This is an x,y tuple with the position of the mouse. (WARNING: This is 0, 0 until the user moves their mouse) We are just going to set the y position of the ball to be the y position of the mouse. We can do this with this line of code: ```paddle.move(paddle.pos[0], game.mousepos[1])```. Now, the paddle moves with the player's mouse! The code now looks like this:
+```python
+from GPGame.engine import GPGame
+from GPGame.components import Rect, Oval, Text
+
+game = GPGame()
+paddle = Rect(10, 0, 10, 100, (1, 1, 1))
+ball = Oval(game.window.width/2, game.window.height/2, 100, 100, (0, 1, 1))
+score = 0
+scoredisplay = Text(str(score), font_size="75sp")
+scoredisplay.move(game.window.width/2, game.window.height-150)
+cpupaddle = Rect(game.window.width - 20, 0, 10, 100, (1, 1, 1))
+ballvelx = 400
+ballvely = 400
+
+game.add_component(paddle)
+game.add_component(ball)
+game.add_component(scoredisplay)
+game.add_component(cpupaddle)
+
+
+def tick(dt):
+    global ballvely, ballvelx, score
+    ball.move(ball.pos[0] + ballvelx*dt, ball.pos[1] + ballvely*dt)
+
+    if (ball.pos[0] < 0) or (ball.pos[0] > game.window.width - 120):
+        ballvelx *= -1
+
+    if (ball.pos[1] < 0) or (ball.pos[1] > game.window.height - 100):
+        ballvely *= -1
+
+    cpupaddle.move(cpupaddle.pos[0], ball.pos[1])
+    paddle.move(paddle.pos[0], game.mousepos[1])
+
+
+game.set_tick(tick, 1/60)
+if __name__ == "__main__":
+    game.run("Tutorial")
+
+```
+And the game now looks like this (The screen recording software does not capture my mouse, but I assure you the paddle is following my mouse).
+![GIF with user input](https://i.imgur.com/U8633Fb.gif)
