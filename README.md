@@ -111,7 +111,7 @@ if __name__ == "__main__":
 ```
 This program was 105 lines! I noticed that there was a lot of repeated code, like defining a boilerplate class, and creating widgets that could move around. GPGame already has simple objects for commonly used widgets, in addition to a GPGame object that creates a boilerplate game with input handling and mouse movement handling.
 ## How to create Pong
-### Creating GPGame
+### Creating an empty GPGame
 A basic game in GPGame simply requires 4 lines! To create an empty game in GPGame, you have to import GPGame, and run! Code is below.
 ```python
 from GPGame.engine import GPGame
@@ -119,4 +119,28 @@ game = GPGame()
 if __name__ == "__main__":
     game.run("Tutorial")
 ```
-Line 1 imports GPGame. The main GPGame object is within engine. 
+Line 1 imports GPGame. The main GPGame object is within engine. A GPGame object is a child of the Kivy Widget. To import, just run ```from GPGame.engine import GPGame```.
+Line 2 creates a GPGame. To create a GPGame, just instantiate a class. 
+Line 4 runs GPGame. A GPGame class has a run method. The run method accepts a title parameter. This title parameter will be the title of the window.
+
+### Adding a player-controlled paddle
+For the paddle, we are going to use a rectangle. All canvas items in GPGame are called components. Components are Kivy Widget classes with some methods. Components have their kivy object stored in the kobj attribute. Most of the time you will not need this.
+All components are under the components.py file. To import components, just run ```from GPGame.components import Rect```
+Once you have imported Rect, instantiate a rect objects. A rect object accepts the parameters x, y, width, height, and color. color is a 3 item tuple containing a value from 0 to 1 for r, g, and b.
+For Pong, we are going to instantiate a Rect with an x of 10, a y of 0, a width of 10, and a height of 100. Since the default background color of a window is black, I am going to make the paddle white by setting the color to (1, 1, 1). The code for this is ```paddle = Rect(10, 0, 10, 100, (1, 1, 1))```
+Finally, add this component to the game for it to be rendered. To do this, a GPGame object has a add_component method. This method will add the component. To reverse this, use remove_component. We will put ```game.add_component(paddle)```.
+Now, the code is:
+```python
+from GPGame.engine import GPGame
+from GPGame.components import Rect
+
+game = GPGame()
+paddle = Rect(0, 0, 10, 100, (1, 1, 1))
+game.add_component(paddle)
+
+if __name__ == "__main__":
+    game.run("Tutorial")
+
+```
+When we run this, we see a rectangle in the bottom right corner of the screen (0, 0)! Congratulations!
+![Screenshot of game at this step](https://i.imgur.com/YWXeMeh.png)
