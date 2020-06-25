@@ -1,6 +1,18 @@
 # GPGame
 GPGame is an abstraction layer on the Kivy GPU accelerated engine.
 
+## Installation
+To install GPGame with pip, run the following command.
+```bash
+python3 -m pip install git+https://github.com/Nv7-GitHub/GPGame.git
+```
+To install from source, run the following commands
+```bash
+git clone https://github.com/Nv7-GitHub/GPGame.git
+cd GPGame
+python3 setup.py install
+```
+
 ## Why GPGame?
 Games using Kivy often have a lot of unnecessary code for the OOP. GPGame makes code shorter, makes coding games faster, and makes code more readable. In my examples I am going to be using Pong, a simple game. I am going to measure simplicity by lines of code, although I have also found that GPGame code is more readable. Below is Pong using only Kivy.
 
