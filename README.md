@@ -522,3 +522,47 @@ if __name__ == "__main__":
 And when we run it, it looks like this:
 
 ![Final Game](https://i.imgur.com/3O2nadR.gif)
+
+### Keyboard Input
+To get keyboard input, all keys pressed are stored in the GPGame.engine.GPGame keys_pressed attribute. To check for arrow keys, import K_LEFT, K_RIGHT, K_UP, and K_DOWN, and check if they are in the keys_pressed list.
+
+# Components
+You can import these components from GPGame.components. All components are children of Kivy.uix.widget.Widget. Their widgets are stored in there kobj attribute. If they are canvas items, they have a ktype attribute of GP and a kcol attribute with a kivy.graphics.Color object, and if they are a uix element, their ktype is simply GPG.
+
+## Rect(x, y, width, height, color, **kwargs)**
+Creates rectangle. kobj is ```Kivy.graphics.Rectangle```.
+### resize(width, height)
+Resizes rectangle.
+### move(x, y)
+Moves rectangle.
+
+## Oval(x, y, width, height, color, **kwargs)**
+Creates rectangle. kobj is ```Kivy.graphics.Ellipse```.
+### resize(width, height)
+Resizes oval.
+### move(x, y)
+Moves oval.
+
+## Text(text, **kwargs)**
+Creates rectangle. kobj is ```Kivy.uix.label.Label```. To style text, put arguments in kwargs to style label.
+### set_text(text)
+Changes text
+### move(x, y)
+Moves text.
+
+## Img(imagepath, **kwargs)**
+Creates rectangle. kobj is ```Kivy.uix.image.Image```.
+### resize(width, height)
+Resizes image.
+### move(x, y)
+Moves image.
+
+
+## Btn(imagepath, **kwargs)**
+Creates rectangle. kobj is ```Kivy.uix.button.Button```. To style button, put arguments in kwargs to style label.
+### resize(width, height)
+Resizes button.
+### move(x, y)
+Moves button.
+### set_text(text)
+Changes button text.
