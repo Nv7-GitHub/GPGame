@@ -1,6 +1,7 @@
 from kivy.graphics import Rectangle, Ellipse
 from kivy.uix.label import Label
 from kivy.uix.image import Image
+from kivy.uix.button import Button
 from kivy.graphics import Color
 from kivy.uix.widget import Widget
 
@@ -70,3 +71,25 @@ class Img(Widget):
     def resize(self, width, height):
         self.size = (width, height)
         self.kobj.size = self.size
+
+
+class Btn(Widget):
+    def __init__(self, text, onclick, x, y, width, height, **kwargs):
+        super(Btn, self).__init__()
+        self.text = text
+        self.pos = (x, y)
+        self.size = (width, height)
+        self.kobj = Button(pos=self.pos, size=self.size, text=self.text, on_press=onclick, **kwargs)
+        self.ktype = "WGP"
+
+    def move(self, x, y):
+        self.pos = (x, y)
+        self.kobj.pos = self.pos
+
+    def resize(self, width, height):
+        self.size = (width, height)
+        self.kobj.size = self.size
+
+    def set_text(self, text):
+        self.text = text
+        self.kobj.text = text
