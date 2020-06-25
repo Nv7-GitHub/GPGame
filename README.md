@@ -3,7 +3,9 @@ GPGame is an abstraction layer on the Kivy GPU accelerated engine.
 
 ## Installation
 To install GPGame with pip, run the following command.
-```python3 -m pip install GPGame```
+```bash
+python3 -m pip install GPGame
+```
 To install GPGame from github, run the following command.
 ```bash
 python3 -m pip install git+https://github.com/Nv7-GitHub/GPGame.git
