@@ -407,3 +407,155 @@ if __name__ == "__main__":
 And our game looks like this! (again, it is not actually this slow) Also, you can see that when it bounces off the wall, the score does not change:
 
 ![Game with ball bouncing off of paddle and score changing](https://i.imgur.com/R7St9za.gif)
+
+## Gameover Screeen
+### Making the game stop
+For the gameover screen, we can use the event where the ball bounces of the left side of the wall, remove the components, and make some new widgets to display score. First, we have to make the game stop though. To do this, we are going to make a variable called run, which will start out as True, and we can change that when the game is over. Once we have done that, our code looks like this:
+```python
+from GPGame.engine import GPGame
+from GPGame.components import Rect, Oval, Text
+
+game = GPGame()
+paddle = Rect(10, 0, 10, 100, (1, 1, 1))
+ball = Oval(game.window.width/2, game.window.height/2, 100, 100, (0, 1, 1))
+score = 0
+scoredisplay = Text(str(score), font_size="75sp")
+scoredisplay.move(game.window.width/2, game.window.height-150)
+cpupaddle = Rect(game.window.width - 20, 0, 10, 100, (1, 1, 1))
+ballvelx = 400
+ballvely = 400
+run = True
+
+game.add_component(paddle)
+game.add_component(ball)
+game.add_component(scoredisplay)
+game.add_component(cpupaddle)
+
+
+def tick(dt):
+    global run
+    if run:
+        global ballvely, ballvelx, score
+        ball.move(ball.pos[0] + ballvelx*dt, ball.pos[1] + ballvely*dt)
+
+        if (ball.pos[0] < 0) or (ball.pos[0] > game.window.width - 120):
+            ballvelx *= -1
+            if ball.pos[0] < 0:
+                run = False
+
+        if (ball.pos[1] < 0) or (ball.pos[1] > game.window.height - 100):
+            ballvely *= -1
+
+        cpupaddle.move(cpupaddle.pos[0], ball.pos[1])
+        paddle.move(paddle.pos[0], game.mousepos[1])
+
+        if (ball.pos[0] < 20) and (round(ball.pos[1]) in range(round(paddle.pos[1] - 100), round(paddle.pos[1] + 100))):
+            score += 1
+            scoredisplay.set_text(str(score))
+            ballvelx *= -1
+
+            ballvelx *= 1.1
+            ballvely *= 1.1
+
+
+game.set_tick(tick, 1/60)
+if __name__ == "__main__":
+    game.run("Tutorial")
+
+```
+
+And our game looks like this:
+
+![Game with stopping when ball hits your side](https://i.imgur.com/CUl3T7q.gif)
+
+### Making the gameover screen
+For the gameover screen, we are going to put "Game Over" in big red text, with your score below in white text. To do this, we are going to remove all components, and create 2 new text objects. First, to remove the components, we will put the following code in our game over section:
+```python
+game.remove_component(paddle)
+game.remove_component(ball)
+game.remove_component(scoredisplay)
+game.remove_component(cpupaddle)
+```
+Finally, lets create the 2 text things, position them correctly, and add them using the following code:
+```python
+gameovertext = Text(text="Game Over.", halign="center", valign="center", font_size="100sp", color=(1, 0, 0, 1))
+gameovertext.move(game.window.width / 2, (game.window.height / 2) + 100)
+
+scoretext = Text(text="Your score was " + str(score) + ".", halign="center", valign="center", font_size="90sp")
+scoretext.move(game.window.width / 2, (game.window.height / 2) - 100)
+
+game.add_component(gameovertext)
+game.add_component(scoretext)
+````
+Now, our game is completed! The final code looks like this
+```python
+from GPGame.engine import GPGame
+from GPGame.components import Rect, Oval, Text
+
+game = GPGame()
+paddle = Rect(10, 0, 10, 100, (1, 1, 1))
+ball = Oval(game.window.width/2, game.window.height/2, 100, 100, (0, 1, 1))
+score = 0
+scoredisplay = Text(str(score), font_size="75sp")
+scoredisplay.move(game.window.width/2, game.window.height-150)
+cpupaddle = Rect(game.window.width - 20, 0, 10, 100, (1, 1, 1))
+ballvelx = 400
+ballvely = 400
+run = True
+
+game.add_component(paddle)
+game.add_component(ball)
+game.add_component(scoredisplay)
+game.add_component(cpupaddle)
+
+
+def tick(dt):
+    global run
+    if run:
+        global ballvely, ballvelx, score
+        ball.move(ball.pos[0] + ballvelx*dt, ball.pos[1] + ballvely*dt)
+
+        if (ball.pos[0] < 0) or (ball.pos[0] > game.window.width - 120):
+            ballvelx *= -1
+            if ball.pos[0] < 0:
+                run = False
+
+                game.remove_component(paddle)
+                game.remove_component(ball)
+                game.remove_component(scoredisplay)
+                game.remove_component(cpupaddle)
+
+                gameovertext = Text(text="Game Over.", halign="center", valign="center", font_size="100sp",
+                                    color=(1, 0, 0, 1))
+                gameovertext.move(game.window.width / 2, (game.window.height / 2) + 100)
+
+                scoretext = Text(text="Your score was " + str(score) + ".", halign="center", valign="center",
+                                 font_size="90sp")
+                scoretext.move(game.window.width / 2, (game.window.height / 2) - 100)
+
+                game.add_component(gameovertext)
+                game.add_component(scoretext)
+
+        if (ball.pos[1] < 0) or (ball.pos[1] > game.window.height - 100):
+            ballvely *= -1
+
+        cpupaddle.move(cpupaddle.pos[0], ball.pos[1])
+        paddle.move(paddle.pos[0], game.mousepos[1])
+
+        if (ball.pos[0] < 20) and (round(ball.pos[1]) in range(round(paddle.pos[1] - 100), round(paddle.pos[1] + 100))):
+            score += 1
+            scoredisplay.set_text(str(score))
+            ballvelx *= -1
+
+            ballvelx *= 1.1
+            ballvely *= 1.1
+
+
+game.set_tick(tick, 1/60)
+if __name__ == "__main__":
+    game.run("Tutorial")
+
+```
+And when we run it, it looks like this:
+
+![Final Game](https://i.imgur.com/3O2nadR.gif)
