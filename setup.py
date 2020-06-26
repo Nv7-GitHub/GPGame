@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="GPGame",
-    version="0.0.1",
+    version="2020.0.2",
     author="Nishant Vikramaditya",
     author_email="junk4Nv7@gmail.com",
     description="An abstraction layer on the Kivy GPU accelerated engine.",
