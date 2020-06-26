@@ -11,7 +11,9 @@ class GPGame(Widget):
         self.window = Window
         self.mousepos = (0, 0)
         self.keys_pressed = []
-        Window.bind(mouse_pos=self.kmousehandler, on_key_down=self.kkeyhandlerdown, on_key_up=self.kkeyhandlerup)
+        self.mousedown = False
+        Window.bind(mouse_pos=self.kmousehandler, on_key_down=self.kkeyhandlerdown, on_key_up=self.kkeyhandlerup,
+                    on_motion=self.kmouseclick)
 
     def set_tick(self, tickfunc, interval):
         self.tick = tickfunc
@@ -37,6 +39,12 @@ class GPGame(Widget):
 
     def kmousehandler(self, w, p):
         self.mousepos = p
+
+    def kmouseclick(self, a, etype, c):
+        if etype  == "begin":
+            self.mousedown = True
+        elif etype == "end":
+            self.mousedown = False
 
     def kkeyhandlerdown(self, keyboard, keycode, whoknows, key, modifiers):
         self.keys_pressed.append(chr(keycode))
