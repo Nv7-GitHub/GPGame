@@ -1,8 +1,7 @@
-from kivy.graphics import Rectangle, Ellipse
+from kivy.graphics import Rectangle, Ellipse, Color, Line
 from kivy.uix.label import Label
 from kivy.uix.image import Image
 from kivy.uix.button import Button
-from kivy.graphics import Color
 from kivy.uix.widget import Widget
 
 
@@ -93,3 +92,16 @@ class Btn(Widget):
     def set_text(self, text):
         self.text = text
         self.kobj.text = text
+
+
+class Polygon(Widget):
+    def __init__(self, points, color,  **kwargs):
+        super(Polygon, self).__init__()
+        self.points = points
+        self.kcol = Color(color[0], color[1], color[2])
+        self.kobj = Line(points=self.points, **kwargs)
+        self.ktype = "GP"
+
+    def set_points(self, points):
+        self.points = points
+        self.kobj.points = self.points
