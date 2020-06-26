@@ -542,6 +542,9 @@ And when we run it, it looks like this:
 ### Keyboard Input
 To get keyboard input, all keys pressed are stored in the GPGame.engine.GPGame keys_pressed attribute. To check for arrow keys, import K_LEFT, K_RIGHT, K_UP, and K_DOWN, and check if they are in the keys_pressed list.
 
+### Mousedown
+To check if the mouse is down, there is a mousedown attribute of a GPGame.engine.GPGame object. If it is false, the mouse is not pressed, and if it is true, the mouse is pressed.
+
 # Components
 You can import these components from GPGame.components. All components are children of Kivy.uix.widget.Widget. Their widgets are stored in there kobj attribute. If they are canvas items, they have a ktype attribute of GP and a kcol attribute with a kivy.graphics.Color object, and if they are a uix element, their ktype is simply GPG.
 
@@ -582,3 +585,9 @@ Resizes button.
 Moves button.
 ### set_text(text)
 Changes button text.
+
+## Polygon(points, **kwargs)**
+Creates polygon with list of points. kobj is ```Kivy.graphics.Line```
+A set of points is in the format ```[x1, y1, x2, y2, x3, y3, ...]```
+### set_points
+Sets the points to a different list of points.
